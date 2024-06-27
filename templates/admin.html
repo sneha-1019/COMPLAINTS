@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - View Complaints</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <h1 class="alert alert-info mt-2">Complaints List</h1>
+    <div id="complaints-container" class="mt-4">
+      <!-- Complaints will be injected here by JavaScript -->
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    fetch('/admin/complaints')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('complaints-container');
+        data.forEach(complaint => {
+          const complaintDiv = document.createElement('div');
+          complaintDiv.className = 'card mt-3';
+          complaintDiv.innerHTML = `
+            <div class="card-body">
+              <h5 class="card-title">${complaint.name}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">${complaint.email}</h6>
+              <p class="card-text">Location: ${complaint.location}</p>
+              <p class="card-text">Message: ${complaint.message}</p>
+              <a href="/${complaint.img_path}" target="_blank" class="card-link">View Attachment</a>
+            </div>
+          `;
+          container.appendChild(complaintDiv);
+        });
+      })
+      .catch(error => console.error('Error fetching complaints:', error));
+  </script>
+</body>
+</html>
